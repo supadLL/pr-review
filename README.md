@@ -1,23 +1,23 @@
-# PR Review Skill
+# PR Review Skill 🔎
 
-一个本地优先、非 Agent 化的 PR / 代码审查 Skill。
+一个本地优先、非 Agent 化的 PR / 代码审查 Skill。🧭
 
 它不依赖 PR-Agent、远端 PR URL、GitHub/GitLab Token 或独立服务，而是让 Codex/AI 直接读取本地 Git 仓库的 diff、提交记录、项目配置、CI 信息和相关源码上下文，按 PR 审查流程生成中文审查报告。适合个人提交前自查、小团队代码评审，也可以作为企业本地化代码审查流程的基础框架。
 
-## 核心能力
+## ✨ 核心能力
 
-- **本地 PR 风格审查**：支持 staged、unstaged、指定 range、当前分支相对 upstream、最后一次提交等审查目标。
-- **默认中文报告**：每次审查后默认在被审查仓库根目录生成 `review.md`，内容包含审查目标、整体风险、问题发现、检查结果、审查范围和规则来源。
-- **跨平台上下文采集**：Windows 使用 PowerShell 脚本，macOS/Linux 使用 Bash 脚本。
-- **项目类型识别**：采集脚本会识别 Node、React、Electron、TypeScript、Vite、Python、Go、Rust、GitHub Actions 等项目特征。
-- **建议检查命令**：根据项目脚本自动提示 `npm run build`、`npm run lint`、`npm run electron:pack`、`pytest`、`go test ./...`、`cargo test` 等检查项。
-- **通用企业级审查清单**：覆盖正确性、安全、权限、数据、测试、CI/CD、打包发布、可观测性和性能风险。
-- **技术栈专项规则**：内置 React/前端、Node/TypeScript、Electron、CI/Release、安全、测试充分性等专项规则。
-- **企业规则增强**：如果目标仓库存在 `.codex/pr-review.md` 等项目规则文件，会自动加载作为增强规则；没有规则文件也能正常运行，退回通用审查。
-- **规则信任模型**：如果规则文件本身在本次 diff 中被修改，会降低信任级别，避免通过修改规则绕过审查。
-- **跨平台 CI 验证**：仓库自带 GitHub Actions，在 Ubuntu 验证 Bash 采集脚本，在 Windows 验证 PowerShell 采集脚本。
+- 🔍 **本地 PR 风格审查**：支持 staged、unstaged、指定 range、当前分支相对 upstream、最后一次提交等审查目标。
+- 📝 **默认中文报告**：每次审查后默认在被审查仓库根目录生成 `review.md`，内容包含审查目标、整体风险、问题发现、检查结果、审查范围和规则来源。
+- 🖥️ **跨平台上下文采集**：Windows 使用 PowerShell 脚本，macOS/Linux 使用 Bash 脚本。
+- 🧩 **项目类型识别**：采集脚本会识别 Node、React、Electron、TypeScript、Vite、Python、Go、Rust、GitHub Actions 等项目特征。
+- 🧪 **建议检查命令**：根据项目脚本自动提示 `npm run build`、`npm run lint`、`npm run electron:pack`、`pytest`、`go test ./...`、`cargo test` 等检查项。
+- 🏢 **通用企业级审查清单**：覆盖正确性、安全、权限、数据、测试、CI/CD、打包发布、可观测性和性能风险。
+- 🧱 **技术栈专项规则**：内置 React/前端、Node/TypeScript、Electron、CI/Release、安全、测试充分性等专项规则。
+- 📚 **企业规则增强**：如果目标仓库存在 `.codex/pr-review.md` 等项目规则文件，会自动加载作为增强规则；没有规则文件也能正常运行，退回通用审查。
+- 🛡️ **规则信任模型**：如果规则文件本身在本次 diff 中被修改，会降低信任级别，避免通过修改规则绕过审查。
+- ✅ **跨平台 CI 验证**：仓库自带 GitHub Actions，在 Ubuntu 验证 Bash 采集脚本，在 Windows 验证 PowerShell 采集脚本。
 
-## 工作方式
+## ⚙️ 工作方式
 
 当你要求 Codex 做 PR 审查或代码审查时，Skill 会指导 AI 按以下流程执行：
 
@@ -29,7 +29,7 @@
 6. 输出 findings-first 的审查结论。
 7. 生成 `review.md` 审查报告。
 
-## 安装
+## 📦 安装
 
 将本仓库放入 Codex skills 目录，或将其映射到 Codex 可发现的 skills 目录中。目录结构应保留为：
 
@@ -42,7 +42,7 @@ pr-review/
   templates/
 ```
 
-## 使用示例
+## 🚀 使用示例
 
 在 Codex 中直接提出类似请求：
 
@@ -62,7 +62,7 @@ pr-review/
 对 D:\work\my-project 做一次企业级代码审查
 ```
 
-## 单独运行上下文采集脚本
+## 🛠️ 单独运行上下文采集脚本
 
 这些脚本只读，不会修改被审查仓库。
 
@@ -90,7 +90,7 @@ macOS/Linux 指定 range：
 bash ./scripts/collect-review-context.sh --repo-path . --range origin/main...HEAD
 ```
 
-## 企业/项目规则
+## 🏢 企业/项目规则
 
 企业规则不是必需的。没有企业规则文件时，本 Skill 会继续使用通用审查清单和技术栈规则。
 
@@ -130,7 +130,7 @@ CONTRIBUTING.md
 .github/copilot-instructions.md
 ```
 
-## 报告格式
+## 📄 报告格式
 
 默认生成中文 `review.md`，包含：
 
@@ -151,7 +151,7 @@ CONTRIBUTING.md
 - 实际影响
 - 修复建议或验证方式
 
-## 文件说明
+## 🗂️ 文件说明
 
 - `SKILL.md`：Skill 主流程、触发说明、输出格式和审查策略。
 - `references/enterprise-checklist.md`：通用企业级审查清单。
@@ -166,6 +166,6 @@ CONTRIBUTING.md
 - `scripts/collect-review-context.sh`：macOS/Linux 只读上下文采集脚本。
 - `.github/workflows/verify.yml`：跨平台脚本验证 workflow。
 
-## 设计取向
+## 🎯 设计取向
 
 这个项目不是 PR-Agent 这样的完整平台，也不会连接远端 PR 系统或自动发布评论。它更像一个可分发的本地审查流程框架：让 AI 读取 Skill 后，用一致的方法审查本地代码变更，并生成可查阅的报告。
