@@ -40,18 +40,20 @@ State the selected target briefly in the final answer.
 
 ## Deterministic Context Collection
 
-Prefer the bundled collector when reviewing an ordinary local repository:
+Prefer the bundled collector when reviewing an ordinary local repository.
+
+`<skill-root>` means the directory that contains this `SKILL.md` file. Do not assume any fixed install path; different users may install the skill in different locations. Resolve the actual skill root from the loaded skill path, then call the script from there.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File D:\ai-skill\pr-review\scripts\collect-review-context.ps1 -RepoPath .
+powershell -ExecutionPolicy Bypass -File <skill-root>\scripts\collect-review-context.ps1 -RepoPath <repo-path>
 ```
 
 Use parameters when needed:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File D:\ai-skill\pr-review\scripts\collect-review-context.ps1 -RepoPath . -Range origin/main...HEAD
-powershell -ExecutionPolicy Bypass -File D:\ai-skill\pr-review\scripts\collect-review-context.ps1 -RepoPath . -Staged
-powershell -ExecutionPolicy Bypass -File D:\ai-skill\pr-review\scripts\collect-review-context.ps1 -RepoPath . -LastCommit
+powershell -ExecutionPolicy Bypass -File <skill-root>\scripts\collect-review-context.ps1 -RepoPath <repo-path> -Range origin/main...HEAD
+powershell -ExecutionPolicy Bypass -File <skill-root>\scripts\collect-review-context.ps1 -RepoPath <repo-path> -Staged
+powershell -ExecutionPolicy Bypass -File <skill-root>\scripts\collect-review-context.ps1 -RepoPath <repo-path> -LastCommit
 ```
 
 The collector is read-only. It prints:
