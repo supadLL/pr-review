@@ -121,6 +121,55 @@ $changedText -split "`n" |
   Where-Object { $_ -match "package-lock\.json|pnpm-lock\.yaml|yarn\.lock|dist/|release/|target/|coverage/|node_modules/|\.png$|\.jpg$|\.ico$|\.pdf$|\.zip$|\.exe$" } |
   ForEach-Object { Write-Output $_ }
 
+Write-Section "Detected Project Profile"
+$profiles = @()
+if (Test-Path "package.json") {
+  $profiles += "node"
+  try {
+    $pkg = Get-Content -Raw -LiteralPath "package.json" -Encoding UTF8 | ConvertFrom-Json
+    if ($pkg.dependencies.react -or $pkg.devDependencies.react) { $profiles += "react" }
+    if ($pkg.devDependencies.electron -or $pkg.dependencies.electron) { $profiles += "electron" }
+    if ($pkg.devDependencies.typescript -or (Test-Path "tsconfig.json")) { $profiles += "typescript" }
+    if ($pkg.devDependencies.vite -or $pkg.dependencies.vite -or (Test-Path "vite.config.ts") -or (Test-Path "vite.config.js")) { $profiles += "vite" }
+  } catch {
+    Write-Output "Could not parse package.json: $($_.Exception.Message)"
+  }
+}
+if (Test-Path "pyproject.toml") { $profiles += "python" }
+if (Test-Path "go.mod") { $profiles += "go" }
+if (Test-Path "Cargo.toml") { $profiles += "rust" }
+if (Test-Path ".github/workflows") { $profiles += "github-actions" }
+if ($profiles.Count -eq 0) {
+  Write-Output "No common project profile detected."
+} else {
+  $profiles | Select-Object -Unique | ForEach-Object { Write-Output "- $_" }
+}
+
+Write-Section "Suggested Local Checks"
+$checks = @()
+if (Test-Path "package.json") {
+  try {
+    $pkg = Get-Content -Raw -LiteralPath "package.json" -Encoding UTF8 | ConvertFrom-Json
+    $scripts = $pkg.scripts
+    if ($scripts.build) { $checks += "npm run build" }
+    if ($scripts.typecheck) { $checks += "npm run typecheck" }
+    if ($scripts.lint) { $checks += "npm run lint" }
+    if ($scripts.test) { $checks += "npm test" }
+    if ($scripts.'electron:pack') { $checks += "npm run electron:pack" }
+    if ($scripts.'electron:build') { $checks += "npm run electron:build" }
+  } catch {
+    $checks += "npm install / npm test / npm run build (inspect package.json first)"
+  }
+}
+if (Test-Path "pyproject.toml") { $checks += "pytest" }
+if (Test-Path "go.mod") { $checks += "go test ./..." }
+if (Test-Path "Cargo.toml") { $checks += "cargo test" }
+if ($checks.Count -eq 0) {
+  Write-Output "No common local checks detected. Inspect project docs and CI."
+} else {
+  $checks | Select-Object -Unique | ForEach-Object { Write-Output "- $_" }
+}
+
 Write-Section "Project Review Rules"
 $ruleCandidates = @(
   ".codex/pr-review.md",

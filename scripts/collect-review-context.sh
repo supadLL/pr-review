@@ -137,6 +137,44 @@ section "Likely Noise Files"
 printf '%s\n' "$changed" |
   grep -E 'package-lock\.json|pnpm-lock\.yaml|yarn\.lock|dist/|release/|target/|coverage/|node_modules/|\.png$|\.jpg$|\.ico$|\.pdf$|\.zip$|\.exe$' || true
 
+section "Detected Project Profile"
+profiles=()
+if [[ -f "package.json" ]]; then
+  profiles+=("node")
+  grep -q '"react"' package.json && profiles+=("react")
+  grep -q '"electron"' package.json && profiles+=("electron")
+  { grep -q '"typescript"' package.json || [[ -f "tsconfig.json" ]]; } && profiles+=("typescript")
+  { grep -q '"vite"' package.json || [[ -f "vite.config.ts" || -f "vite.config.js" ]]; } && profiles+=("vite")
+fi
+[[ -f "pyproject.toml" ]] && profiles+=("python")
+[[ -f "go.mod" ]] && profiles+=("go")
+[[ -f "Cargo.toml" ]] && profiles+=("rust")
+[[ -d ".github/workflows" ]] && profiles+=("github-actions")
+if [[ "${#profiles[@]}" -eq 0 ]]; then
+  printf 'No common project profile detected.\n'
+else
+  printf '%s\n' "${profiles[@]}" | sort -u | sed 's/^/- /'
+fi
+
+section "Suggested Local Checks"
+checks=()
+if [[ -f "package.json" ]]; then
+  grep -q '"build"[[:space:]]*:' package.json && checks+=("npm run build")
+  grep -q '"typecheck"[[:space:]]*:' package.json && checks+=("npm run typecheck")
+  grep -q '"lint"[[:space:]]*:' package.json && checks+=("npm run lint")
+  grep -q '"test"[[:space:]]*:' package.json && checks+=("npm test")
+  grep -q '"electron:pack"[[:space:]]*:' package.json && checks+=("npm run electron:pack")
+  grep -q '"electron:build"[[:space:]]*:' package.json && checks+=("npm run electron:build")
+fi
+[[ -f "pyproject.toml" ]] && checks+=("pytest")
+[[ -f "go.mod" ]] && checks+=("go test ./...")
+[[ -f "Cargo.toml" ]] && checks+=("cargo test")
+if [[ "${#checks[@]}" -eq 0 ]]; then
+  printf 'No common local checks detected. Inspect project docs and CI.\n'
+else
+  printf '%s\n' "${checks[@]}" | sort -u | sed 's/^/- /'
+fi
+
 section "Project Review Rules"
 rule_candidates=(
   ".codex/pr-review.md"

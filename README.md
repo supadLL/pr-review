@@ -6,6 +6,8 @@
 
 同时支持自动发现项目/企业自定义规则文件：有规则就增强审查，没有规则就退回通用审查。适合个人提交前自查、小团队代码评审，也可作为企业代码审查流程的本地化基础框架。
 
+如果团队还没有项目级规则文件，本 skill 仍会正常运行，并使用内置通用审查清单与技术栈规则兜底。需要企业定制时，可以复制 `templates/pr-review-rules.md` 到目标仓库的 `.codex/pr-review.md` 后逐步补充规则。
+
 ## Usage
 
 将本目录放入 Codex skills 目录后，可以直接向 Codex 提出类似请求：
@@ -36,5 +38,12 @@ bash ./scripts/collect-review-context.sh --repo-path . --last-commit
 
 - `SKILL.md`: skill 主流程与触发说明
 - `references/enterprise-checklist.md`: 企业级通用审查清单
+- `references/frontend-react.md`: React / 前端审查规则
+- `references/node-typescript.md`: Node / TypeScript 审查规则
+- `references/electron.md`: Electron 与桌面打包审查规则
+- `references/ci-release.md`: CI / Release 审查规则
+- `references/security.md`: 安全审查规则
+- `references/testing.md`: 测试充分性审查规则
+- `templates/pr-review-rules.md`: 企业/项目规则模板
 - `scripts/collect-review-context.ps1`: Windows 只读上下文采集脚本
 - `scripts/collect-review-context.sh`: macOS/Linux 只读上下文采集脚本
