@@ -17,6 +17,7 @@ This skill borrows practical patterns from mature PR review systems: collect det
 4. Read changed files plus nearby call sites/tests/config.
 5. Run targeted local checks when practical.
 6. Produce findings first, ordered by severity, with file/line evidence and verification notes.
+7. Write the completed review report to a Markdown file so the user can inspect it later.
 
 ## Review Target Selection
 
@@ -242,9 +243,19 @@ If a check fails, determine whether it is caused by the reviewed changes before 
 
 Lead with findings. If there are no findings, say that clearly.
 
-Use this structure:
+Always produce a review report file after the review. Unless the user gives a different path, write the report to `review.md` in the reviewed repository root. If `review.md` already exists, overwrite it with the latest review result rather than appending. The report should be self-contained and readable without the chat history.
+
+Use this report structure:
 
 ```markdown
+# PR Review Report
+
+**Generated At**
+[Local date/time if available, otherwise omit.]
+
+**Review Target**
+[Repository path, diff mode/range/commit, and changed-file summary.]
+
 **Findings**
 - High: [title] - [file:line]
   [Concrete trigger, impact, and suggested fix.]
@@ -260,6 +271,9 @@ Use this structure:
 
 **Reviewed Scope**
 [Diff target, high-risk areas reviewed, and any intentionally shallow areas.]
+
+**Rule Sources**
+- [Project/enterprise rule files loaded, or "No project-specific PR review rules were found; used the general review checklist."]
 ```
 
 Rules:
@@ -269,7 +283,9 @@ Rules:
 - Prefer fewer high-confidence findings over many speculative comments.
 - Avoid style-only comments.
 - If no issues are found, mention residual risk and test gaps.
-- When the user asks for a report file, write Markdown to `review.md` or the requested path.
+- Always write the same content to the report file before the final chat response.
+- In the final chat response, summarize the highest-severity findings and link to the report file.
+- Do not leave temporary context files in the reviewed repository unless the user explicitly asks for them.
 
 ## Severity Guide
 
