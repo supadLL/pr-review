@@ -1,0 +1,32 @@
+name: Verify
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  bash-collector:
+    name: Bash collector on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Bash syntax
+        run: bash -n scripts/collect-review-context.sh
+
+      - name: Run Bash collector
+        run: bash scripts/collect-review-context.sh --repo-path . --last-commit
+
+  powershell-collector:
+    name: PowerShell collector on Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run PowerShell collector
+        shell: powershell
+        run: powershell -ExecutionPolicy Bypass -File scripts/collect-review-context.ps1 -RepoPath . -LastCommit
