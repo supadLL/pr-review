@@ -18,14 +18,23 @@
 做一次代码审查，检查当前分支相对 origin/main 的改动
 ```
 
-也可以单独运行上下文采集脚本：
+也可以单独运行上下文采集脚本。
+
+Windows：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\collect-review-context.ps1 -RepoPath . -LastCommit
+```
+
+macOS/Linux：
+
+```bash
+bash ./scripts/collect-review-context.sh --repo-path . --last-commit
 ```
 
 ## Files
 
 - `SKILL.md`: skill 主流程与触发说明
 - `references/enterprise-checklist.md`: 企业级通用审查清单
-- `scripts/collect-review-context.ps1`: 只读上下文采集脚本
+- `scripts/collect-review-context.ps1`: Windows 只读上下文采集脚本
+- `scripts/collect-review-context.sh`: macOS/Linux 只读上下文采集脚本

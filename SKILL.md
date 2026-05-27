@@ -12,7 +12,7 @@ This skill borrows practical patterns from mature PR review systems: collect det
 ## Quick Start
 
 1. Identify the review target and diff range.
-2. Collect deterministic context with local git commands, or run `scripts/collect-review-context.ps1`.
+2. Collect deterministic context with local git commands, or run the bundled collector script for the current OS.
 3. Load project or enterprise review rules if the repository provides them.
 4. Read changed files plus nearby call sites/tests/config.
 5. Run targeted local checks when practical.
@@ -44,17 +44,35 @@ Prefer the bundled collector when reviewing an ordinary local repository.
 
 `<skill-root>` means the directory that contains this `SKILL.md` file. Do not assume any fixed install path; different users may install the skill in different locations. Resolve the actual skill root from the loaded skill path, then call the script from there.
 
+Windows:
+
 ```powershell
 powershell -ExecutionPolicy Bypass -File <skill-root>\scripts\collect-review-context.ps1 -RepoPath <repo-path>
 ```
 
-Use parameters when needed:
+Windows parameters when needed:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File <skill-root>\scripts\collect-review-context.ps1 -RepoPath <repo-path> -Range origin/main...HEAD
 powershell -ExecutionPolicy Bypass -File <skill-root>\scripts\collect-review-context.ps1 -RepoPath <repo-path> -Staged
 powershell -ExecutionPolicy Bypass -File <skill-root>\scripts\collect-review-context.ps1 -RepoPath <repo-path> -LastCommit
 ```
+
+macOS/Linux:
+
+```bash
+bash <skill-root>/scripts/collect-review-context.sh --repo-path <repo-path>
+```
+
+macOS/Linux parameters when needed:
+
+```bash
+bash <skill-root>/scripts/collect-review-context.sh --repo-path <repo-path> --range origin/main...HEAD
+bash <skill-root>/scripts/collect-review-context.sh --repo-path <repo-path> --staged
+bash <skill-root>/scripts/collect-review-context.sh --repo-path <repo-path> --last-commit
+```
+
+If PowerShell Core (`pwsh`) is available on macOS/Linux, the `.ps1` script can also be used, but the Bash collector is the portable default for Unix-like systems.
 
 The collector is read-only. It prints:
 
