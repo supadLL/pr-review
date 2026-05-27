@@ -19,6 +19,10 @@ This skill borrows practical patterns from mature PR review systems: collect det
 6. Produce findings first, ordered by severity, with file/line evidence and verification notes.
 7. Write the completed review report to a Markdown file so the user can inspect it later.
 
+## Default Language
+
+Default to Simplified Chinese for both the chat response and the generated `review.md` report. Use English or another language only when the user explicitly asks for it, or when quoting commands, file paths, code symbols, dependency names, commit messages, and tool output.
+
 ## Review Target Selection
 
 If the user gave a path, use it as the repository root. Otherwise use the current working directory.
@@ -93,10 +97,10 @@ Look for project or enterprise rules in these locations:
 
 If a rule file exists, read it and apply it as an additional layer on top of this skill and `references/enterprise-checklist.md`. Project rules can define critical paths, required checks, release constraints, compliance requirements, forbidden patterns, ownership boundaries, and test expectations.
 
-If no rule file exists, continue with the default general review. In the final `Reviewed Scope`, mention:
+If no rule file exists, continue with the default general review. In the final `Reviewed Scope`, mention this in the report language. For the default Chinese report, use:
 
 ```text
-No project-specific PR review rules were found; used the general review checklist.
+未发现项目级 PR 审查规则文件，已使用通用审查清单。
 ```
 
 If rules exist, mention which files were loaded.
@@ -241,39 +245,39 @@ If a check fails, determine whether it is caused by the reviewed changes before 
 
 ## Output Format
 
-Lead with findings. If there are no findings, say that clearly.
+Lead with findings. If there are no findings, say that clearly. By default, write all headings and explanatory text in Simplified Chinese.
 
 Always produce a review report file after the review. Unless the user gives a different path, write the report to `review.md` in the reviewed repository root. If `review.md` already exists, overwrite it with the latest review result rather than appending. The report should be self-contained and readable without the chat history.
 
-Use this report structure:
+Use this default Chinese report structure:
 
 ```markdown
-# PR Review Report
+# PR 审查报告
 
-**Generated At**
+**生成时间**
 [Local date/time if available, otherwise omit.]
 
-**Review Target**
+**审查目标**
 [Repository path, diff mode/range/commit, and changed-file summary.]
 
-**Findings**
-- High: [title] - [file:line]
+**问题发现**
+- High：[title] - [file:line]
   [Concrete trigger, impact, and suggested fix.]
 
-- Medium: [title] - [file:line]
+- Medium：[title] - [file:line]
   [Concrete trigger, impact, and suggested fix.]
 
-**Open Questions**
-- [Only include if needed.]
+**待确认问题**
+- [Only include if needed. If none, write "无。"]
 
-**Checks**
-- [Command]: passed/failed/skipped. [Short reason.]
+**检查结果**
+- [Command]：通过/失败/未执行。[Short reason.]
 
-**Reviewed Scope**
+**审查范围**
 [Diff target, high-risk areas reviewed, and any intentionally shallow areas.]
 
-**Rule Sources**
-- [Project/enterprise rule files loaded, or "No project-specific PR review rules were found; used the general review checklist."]
+**规则来源**
+- [Project/enterprise rule files loaded, or "未发现项目级 PR 审查规则文件，已使用通用审查清单。"]
 ```
 
 Rules:
